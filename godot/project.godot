@@ -1,0 +1,23 @@
+; Engine configuration file.
+; Best edited using Godot 4.x.
+config_version=5
+
+[application]
+config/name="NOVA Movement Lab"
+run/main_scene="res://main.tscn"
+
+[display]
+window/size/viewport_width=1280
+window/size/viewport_height=720
+window/size/window_width_override=1280
+window/size/window_height_override=720
+window/stretch/mode="canvas_items"
+
+[rendering]
+renderer/rendering_method="gl_compatibility"
+renderer/rendering_method.mobile="gl_compatibility"
+textures/default_filters/use_nearest_mipmap_filter=false
+
+[layer_names]
+3d_physics/layer_1="World"
+3d_physics/layer_2="Player"
