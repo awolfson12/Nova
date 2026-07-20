@@ -10,6 +10,7 @@ func _ready() -> void:
 	_build_course()
 	_spawn_player()
 	_build_portal_manager()
+	_spawn_physics_tests()
 	_build_hud()
 
 func _build_environment() -> void:
@@ -42,6 +43,7 @@ func _build_course() -> void:
 	_add_box("Finish", Vector3(16, 9, -2), Vector3(8, 1, 8), Color("8ba0b8"), Vector3.ZERO, true)
 	_add_box("PortalTower", Vector3(-17, 5, 12), Vector3(5, 10, 5), Color("8799ad"), Vector3.ZERO, true)
 	_add_box("LaunchCeiling", Vector3(-17, 11, 2), Vector3(10, 1, 14), Color("8799ad"), Vector3.ZERO, true)
+	_add_box("PhysicsDeck", Vector3(-17, 2.5, -12), Vector3(10, 1, 8), Color("7f91a7"), Vector3.ZERO, true)
 	_add_box("BoundaryNorth", Vector3(0, 4, -27), Vector3(54, 8, 1), Color("1d2737"), Vector3.ZERO, false)
 	_add_box("BoundarySouth", Vector3(0, 4, 27), Vector3(54, 8, 1), Color("1d2737"), Vector3.ZERO, false)
 	_add_box("BoundaryWest", Vector3(-27, 4, 0), Vector3(1, 8, 54), Color("1d2737"), Vector3.ZERO, false)
@@ -108,6 +110,35 @@ func _build_portal_manager() -> void:
 	add_child(manager)
 	manager.setup(player)
 
+func _spawn_physics_tests() -> void:
+	for index in range(5):
+		var body := RigidBody3D.new()
+		body.name = "PortalTestBody%d" % index
+		body.position = Vector3(-19.0 + index, 4.2 + index * 0.45, -12.0)
+		body.collision_layer = 8
+		body.collision_mask = 1
+		body.mass = 0.8
+
+		var mesh := MeshInstance3D.new()
+		var sphere := SphereMesh.new()
+		sphere.radius = 0.32
+		sphere.height = 0.64
+		var material := StandardMaterial3D.new()
+		material.albedo_color = Color("d9f2ff")
+		material.emission_enabled = true
+		material.emission = Color("4cc9ff")
+		material.emission_energy_multiplier = 0.8
+		sphere.material = material
+		mesh.mesh = sphere
+		body.add_child(mesh)
+
+		var collider := CollisionShape3D.new()
+		var shape := SphereShape3D.new()
+		shape.radius = 0.32
+		collider.shape = shape
+		body.add_child(collider)
+		add_child(body)
+
 func _build_hud() -> void:
 	var layer := CanvasLayer.new()
 	layer.name = "CanvasLayer"
@@ -115,7 +146,7 @@ func _build_hud() -> void:
 	label.name = "SpeedLabel"
 	label.position = Vector2(24, 20)
 	label.add_theme_font_size_override("font_size", 24)
-	label.text = "NOVA // PORTAL LAB\nLMB blue portal  RMB orange portal"
+	label.text = "NOVA // COMPLETE PORTAL LAB\nLMB blue  RMB orange  glowing spheres test physics traversal"
 	layer.add_child(label)
 
 	var crosshair := Label.new()
