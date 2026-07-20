@@ -2,12 +2,14 @@ extends Node3D
 
 const PLAYER_SCRIPT := preload("res://scripts/player.gd")
 const PORTAL_MANAGER_SCRIPT := preload("res://scripts/portal_manager.gd")
+const GRIND_RAIL_SCRIPT := preload("res://scripts/grind_rail.gd")
 
 var player: CharacterBody3D
 
 func _ready() -> void:
 	_build_environment()
 	_build_course()
+	_build_rails()
 	_spawn_player()
 	_build_portal_manager()
 	_spawn_physics_tests()
@@ -23,7 +25,6 @@ func _build_environment() -> void:
 	environment.ambient_light_energy = 0.55
 	world.environment = environment
 	add_child(world)
-
 	var light := DirectionalLight3D.new()
 	light.rotation_degrees = Vector3(-55, -25, 0)
 	light.light_energy = 1.4
@@ -44,10 +45,29 @@ func _build_course() -> void:
 	_add_box("PortalTower", Vector3(-17, 5, 12), Vector3(5, 10, 5), Color("8799ad"), Vector3.ZERO, true)
 	_add_box("LaunchCeiling", Vector3(-17, 11, 2), Vector3(10, 1, 14), Color("8799ad"), Vector3.ZERO, true)
 	_add_box("PhysicsDeck", Vector3(-17, 2.5, -12), Vector3(10, 1, 8), Color("7f91a7"), Vector3.ZERO, true)
+	_add_box("RailDeck", Vector3(12, 3.0, -15), Vector3(16, 1, 8), Color("4a5368"), Vector3.ZERO, false)
 	_add_box("BoundaryNorth", Vector3(0, 4, -27), Vector3(54, 8, 1), Color("1d2737"), Vector3.ZERO, false)
 	_add_box("BoundarySouth", Vector3(0, 4, 27), Vector3(54, 8, 1), Color("1d2737"), Vector3.ZERO, false)
 	_add_box("BoundaryWest", Vector3(-27, 4, 0), Vector3(1, 8, 54), Color("1d2737"), Vector3.ZERO, false)
 	_add_box("BoundaryEast", Vector3(27, 4, 0), Vector3(1, 8, 54), Color("1d2737"), Vector3.ZERO, false)
+
+func _build_rails() -> void:
+	_add_rail("EntryRail", PackedVector3Array([
+		Vector3(-2, 1.2, -16), Vector3(2, 2.3, -12), Vector3(7, 4.0, -9), Vector3(12, 5.2, -6), Vector3(16, 6.5, -1)
+	]))
+	_add_rail("SkyRail", PackedVector3Array([
+		Vector3(16, 7.0, 1), Vector3(13, 8.0, 7), Vector3(8, 8.8, 13), Vector3(1, 9.5, 17), Vector3(-6, 8.8, 16)
+	]))
+	_add_rail("PortalExitRail", PackedVector3Array([
+		Vector3(-17, 4.0, -8), Vector3(-13, 5.0, -4), Vector3(-10, 6.3, 2), Vector3(-8, 7.5, 8)
+	]))
+
+func _add_rail(label: String, points: PackedVector3Array) -> void:
+	var rail := Node3D.new()
+	rail.name = label
+	rail.set_script(GRIND_RAIL_SCRIPT)
+	add_child(rail)
+	rail.configure(points)
 
 func _add_box(label: String, position: Vector3, size: Vector3, color: Color, rotation_deg := Vector3.ZERO, portalable := false) -> void:
 	var body := StaticBody3D.new()
@@ -56,7 +76,6 @@ func _add_box(label: String, position: Vector3, size: Vector3, color: Color, rot
 	body.rotation_degrees = rotation_deg
 	if portalable:
 		body.add_to_group("portalable")
-
 	var mesh := MeshInstance3D.new()
 	var box_mesh := BoxMesh.new()
 	box_mesh.size = size
@@ -68,7 +87,6 @@ func _add_box(label: String, position: Vector3, size: Vector3, color: Color, rot
 	box_mesh.material = material
 	mesh.mesh = box_mesh
 	body.add_child(mesh)
-
 	var collider := CollisionShape3D.new()
 	var shape := BoxShape3D.new()
 	shape.size = size
@@ -83,19 +101,16 @@ func _spawn_player() -> void:
 	player.collision_layer = 2
 	player.collision_mask = 1
 	player.set_script(PLAYER_SCRIPT)
-
 	var collider := CollisionShape3D.new()
 	var capsule := CapsuleShape3D.new()
 	capsule.radius = 0.45
 	capsule.height = 1.8
 	collider.shape = capsule
 	player.add_child(collider)
-
 	var head := Node3D.new()
 	head.name = "Head"
 	head.position.y = 0.72
 	player.add_child(head)
-
 	var camera := Camera3D.new()
 	camera.name = "Camera3D"
 	camera.current = true
@@ -113,25 +128,15 @@ func _build_portal_manager() -> void:
 func _spawn_physics_tests() -> void:
 	for index in range(5):
 		var body := RigidBody3D.new()
-		body.name = "PortalTestBody%d" % index
 		body.position = Vector3(-19.0 + index, 4.2 + index * 0.45, -12.0)
 		body.collision_layer = 8
 		body.collision_mask = 1
-		body.mass = 0.8
-
 		var mesh := MeshInstance3D.new()
 		var sphere := SphereMesh.new()
 		sphere.radius = 0.32
 		sphere.height = 0.64
-		var material := StandardMaterial3D.new()
-		material.albedo_color = Color("d9f2ff")
-		material.emission_enabled = true
-		material.emission = Color("4cc9ff")
-		material.emission_energy_multiplier = 0.8
-		sphere.material = material
 		mesh.mesh = sphere
 		body.add_child(mesh)
-
 		var collider := CollisionShape3D.new()
 		var shape := SphereShape3D.new()
 		shape.radius = 0.32
@@ -146,9 +151,8 @@ func _build_hud() -> void:
 	label.name = "SpeedLabel"
 	label.position = Vector2(24, 20)
 	label.add_theme_font_size_override("font_size", 24)
-	label.text = "NOVA // COMPLETE PORTAL LAB\nLMB blue  RMB orange  glowing spheres test physics traversal"
+	label.text = "NOVA // RAIL LAB"
 	layer.add_child(label)
-
 	var crosshair := Label.new()
 	crosshair.position = Vector2(635, 345)
 	crosshair.add_theme_font_size_override("font_size", 24)
