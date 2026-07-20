@@ -1,11 +1,9 @@
-# Next milestone: Portal Lab
+# Next milestone: Combat Lab
 
-After movement tuning, the next build should add:
-
-1. Portal-compatible surface markers.
-2. Paired blue and orange portal placement.
-3. Momentum and orientation preservation.
-4. Camera views rendered through portals.
-5. Player and projectile traversal tests.
-
-Portal work should begin only after the movement controller has been play-tested and tuned.
+1. Locally validate and tune movement and paired portal traversal.
+2. Add a first-person scattergun with immediate hit feedback.
+3. Add portal-compatible projectile and ray traversal.
+4. Add stationary and moving target drones.
+5. Add health, damage, aggressive healing, and velocity-based scoring.
+6. Add a short score-attack encounter inside the gray-box arena.
+7. Replace placeholder portal surfaces with live camera rendering after traversal is stable.
