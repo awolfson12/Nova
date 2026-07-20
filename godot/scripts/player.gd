@@ -16,6 +16,7 @@ extends CharacterBody3D
 var head: Node3D
 var camera: Camera3D
 var dash_timer := 0.0
+var portal_cooldown := 0.0
 var spawn_position := Vector3.ZERO
 var is_sliding := false
 var current_speed := 0.0
@@ -38,6 +39,7 @@ func _unhandled_input(event: InputEvent) -> void:
 
 func _physics_process(delta: float) -> void:
 	dash_timer = maxf(0.0, dash_timer - delta)
+	portal_cooldown = maxf(0.0, portal_cooldown - delta)
 	if Input.is_action_just_pressed("restart") or global_position.y < -12.0:
 		_restart()
 
@@ -112,10 +114,17 @@ func _update_camera(delta: float) -> void:
 func _update_hud() -> void:
 	var label := get_tree().current_scene.get_node_or_null("CanvasLayer/SpeedLabel")
 	if label:
-		label.text = "NOVA // MOVEMENT LAB\nSPEED %03d   DASH %s\nWASD move  SPACE jump  SHIFT dash  C/CTRL slide  R restart" % [roundi(current_speed), "READY" if dash_timer <= 0.0 else "CHARGING"]
+		label.text = "NOVA // PORTAL LAB\nSPEED %03d   DASH %s\nLMB blue portal  RMB orange portal\nWASD move  SPACE jump  SHIFT dash  C/CTRL slide  R restart" % [roundi(current_speed), "READY" if dash_timer <= 0.0 else "CHARGING"]
+
+func can_use_portal() -> bool:
+	return portal_cooldown <= 0.0
+
+func mark_portal_used() -> void:
+	portal_cooldown = 0.22
 
 func _restart() -> void:
 	global_position = spawn_position
 	velocity = Vector3.ZERO
 	rotation = Vector3.ZERO
 	head.rotation = Vector3.ZERO
+	portal_cooldown = 0.0
