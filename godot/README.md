@@ -1,6 +1,6 @@
-# NOVA Portal Lab
+# NOVA Rail Lab
 
-This folder contains the first Godot 4 vertical slice for NOVA: momentum movement plus paired portal traversal.
+This Godot 4 vertical slice combines momentum movement, paired portals, physics traversal, and high-speed rail grinding.
 
 ## Requirements
 
@@ -10,56 +10,53 @@ This folder contains the first Godot 4 vertical slice for NOVA: momentum movemen
 
 1. Open Godot.
 2. Import `godot/project.godot`.
-3. Press **F6** or **F5** to run the lab.
+3. Press **F6** or **F5**.
 
 ## Controls
 
-- **WASD** — Move
+- **WASD** — Move and influence grind acceleration
 - **Mouse** — Look
-- **Left mouse** — Place blue portal
-- **Right mouse** — Place orange portal
-- **Space** — Jump / wall jump
-- **Shift** — Dash
-- **C or Ctrl** — Slide
+- **Left mouse** — Blue portal
+- **Right mouse** — Orange portal
+- **Space** — Jump, wall jump, or launch from rail
+- **Shift** — Dash or rail boost
+- **C/Ctrl** — Slide
 - **R** — Restart
 - **Esc** — Release mouse
 
-## Included systems
+## Rail systems
 
-- Accelerated first-person movement
-- Air strafing and momentum-preserving jumps
-- Sliding
-- Ground and air dashing
-- Wall running and wall jumping
-- Dynamic field of view based on speed
-- Paired blue and orange portal placement
-- Live destination views rendered on portal surfaces
-- Portalable-surface filtering
-- Eight-point edge and surface-fit validation
-- Same-surface portal overlap rejection
-- Direction, orientation, linear velocity, and angular velocity transformation
-- Player, rigid-body, and projectile-style traversal support
-- Plane-crossing detection and exit-offset loop prevention
-- Expanded gray-box movement and portal test course
-- Glowing rigid-body test spheres on the Physics Deck
+- Automatic attachment when passing close to a rail at sufficient speed
+- Direction chosen from approach velocity
+- Speed buildup while grinding
+- Dash-powered rail boost
+- Full momentum preservation on jump-off and rail completion
+- Camera roll and expanded field of view at high grind velocity
+- Reattachment lockout to prevent accidental snapping after a jump
+- Multiple elevated rail routes positioned for portal transfers
 
-## Portal testing
+## Existing systems
 
-Portal-compatible surfaces use a lighter metallic-gray material. Dark boundary walls and selected obstacles intentionally reject portal placement.
+- Accelerated ground movement, air strafing, sliding, dashing, wall running, and wall jumping
+- Paired portals with live destination views
+- Edge-fit and overlap validation
+- Player, rigid-body, and projectile-style portal traversal
+- Linear and angular momentum transformation
 
-Suggested test sequence:
+## Suggested test route
 
-1. Place one portal on the floor.
-2. Place the other on a vertical gray wall.
-3. Confirm each portal displays the destination view.
-4. Dash or jump into the floor portal and confirm momentum is preserved.
-5. Roll or push the glowing spheres through a portal and confirm linear and angular motion carry through.
-6. Attempt placement near an edge, corner, or existing portal and confirm invalid placement is rejected.
+1. Sprint and slide down the starting ramp.
+2. Jump toward the purple Entry Rail.
+3. Allow automatic attachment and build speed.
+4. Use **Shift** for a boost.
+5. Press **Space** near the end to preserve momentum into the air.
+6. Place portals to redirect the launch toward another rail.
+7. Test rail-to-portal-to-rail movement at different speeds and angles.
 
 ## Remaining validation
 
-The code-level Portal Lab limitations have been addressed. The project still requires a local Godot editor play test to catch engine-version, rendering, collision, or tuning issues that cannot be executed through the GitHub connector.
+A local Godot 4.3+ play test is still required to tune attachment radius, curve visuals, grind speed, camera roll, portal transfers, and collision behavior.
 
 ## Next milestone
 
-After local validation, add the Combat Lab: scattergun, projectile firing, targets, damage, aggressive healing, shots through portals, and velocity-based scoring.
+Combat Lab: scattergun, targets, damage, aggressive healing, shots through portals, and velocity-based scoring.
