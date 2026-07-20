@@ -1,9 +1,12 @@
 # Next milestone: Combat Lab
 
-1. Locally validate and tune movement and paired portal traversal.
-2. Add a first-person scattergun with immediate hit feedback.
-3. Add portal-compatible projectile and ray traversal.
-4. Add stationary and moving target drones.
-5. Add health, damage, aggressive healing, and velocity-based scoring.
-6. Add a short score-attack encounter inside the gray-box arena.
-7. Replace placeholder portal surfaces with live camera rendering after traversal is stable.
+With movement, portals, physics traversal, and rail grinding established, the next build should add:
+
+1. A fast scattergun with no traditional reload interruption.
+2. Projectile and hitscan traversal through portals.
+3. Targets and basic enemy health.
+4. Aggressive healing from eliminations.
+5. Velocity-based damage and style scoring.
+6. Rail-mounted combat targets and portal ambush routes.
+
+Combat should preserve movement freedom and remain fully usable while grinding.
